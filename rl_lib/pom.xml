@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>fr.polytech.mnia</groupId>
-  <artifactId>rl-lib</artifactId>
+  <artifactId>rl_lib</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>rl-lib</name>
+  <name>rl_lib</name>
   <url>http://maven.apache.org</url>
 
   <properties>
