@@ -30,7 +30,9 @@ public class SimpleRunner extends Runner{
     
     @Override
     public void execSequence() throws Exception {
+        System.out.println("\n=== Epsilon Greedy ===");
         eGreedy();
+        System.out.println("\n=== Bandit Gradient ===");
         bGradient();
     }
 
@@ -167,5 +169,5 @@ public class SimpleRunner extends Runner{
         return results.length - 1;
     }
     
-    
+
 }
