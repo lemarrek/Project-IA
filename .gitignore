@@ -49,4 +49,7 @@ build/
 # Others
 .DS_Store
 Thumbs.db
+
+# Ignorer les fichiers CSV
 *.csv
+
