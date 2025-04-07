@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Random;
 
 import de.prob.statespace.Transition;
-
 /*
  * Cette classe illustre l'exécution de SimpleRL.mch
  */
@@ -20,14 +19,43 @@ public class SimpleRunner extends Runner{
      * Le constructeur lance ProB sur la machine SimpleRL.mch
      * et initialise la machine
      */
+    Map<String,Double> values=new HashMap<>();
+    Map<String,Integer> counts=new HashMap<>();
+    Double alpha=0.1;
+    Double gamma=0.9;
+    Double epsilon=0.2;
+    int iterations=10;
+
+
+    private String chooseAction() {
+        Random random = new Random();
+        if (random.nextDouble() < epsilon) {
+            // Exploration : choix aléatoire
+            List<String> films = new ArrayList<>(values.keySet());
+            return films.get(random.nextInt(films.size()));
+        } else {
+            // Exploitation : choisir la meilleure valeur
+            return Collections.max(values.entrySet(), Map.Entry.comparingByValue()).getKey();
+        }
+    }
+
+
+    private int getReward(String action) {
+        if (action.equals("A") || action.equals("B")) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+
     public SimpleRunner() throws Exception{
         super("/Simple/SimpleRL.mch") ;
         this.initialise();
         env = new Evironnement(this);
         choices = env.getActions();
         
-    } 
-
+    }
     
     @Override
     public void execSequence() throws Exception {
