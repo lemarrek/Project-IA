@@ -1,5 +1,9 @@
 package fr.polytech.mnia;
 
+import java.util.List;
+
+import de.prob.statespace.Transition;
+
 public class TicTacToeRunner extends Runner{
     /*
      * Le constructeur lance ProB sur la machine tictac.mch
@@ -25,7 +29,11 @@ public class TicTacToeRunner extends Runner{
                 win1.equals("FALSE") 
                 & win0.equals("FALSE")
                 & state.getOutTransitions().size() != 0
-        ) {
+        ) { 
+            List<Transition> l = state.getOutTransitions();
+            for (int i = 0; i < l.size(); i++) {
+                showTransition(l.get(i));
+            }
 			state = state.anyOperation(null).explore();
             win1 = state.eval("win(1)").toString() ;
             win0 = state.eval("win(0)").toString() ;
