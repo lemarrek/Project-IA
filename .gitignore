@@ -47,7 +47,6 @@ release.properties
 build/
 
 # Others
-*.csv
 .DS_Store
 Thumbs.db
 
