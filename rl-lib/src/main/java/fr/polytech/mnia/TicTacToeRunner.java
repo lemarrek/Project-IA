@@ -9,10 +9,14 @@ import java.util.Scanner;
 public class TicTacToeRunner extends Runner {
     private final Scanner scanner = new Scanner(System.in);
     private final QLearningAgent qAgent = new QLearningAgent();
+    private Evironnement env; // environnement ProB
+
+    private int userMark = 0; // 0 ou 1, alterne après chaque partie
 
     public TicTacToeRunner() throws Exception {
         super("/TicTacToe/tictac.mch");
         this.initialise();
+        env = new Evironnement(this); // initialisation de l'environnement
     }
 
     public void trainAgent() {
@@ -22,15 +26,34 @@ public class TicTacToeRunner extends Runner {
 
     public void execSequence() throws Exception {
         trainAgent();
-        printWelcomeMessage();
 
         while (true) {
-            if (!playerTurn()) continue;
-            if (checkGameOver(0)) break;
+            printWelcomeMessage();
+            playSingleGame();
+            // alterner le rôle du joueur pour la prochaine partie
+            userMark = 1 - userMark;
+            System.out.print("Rejouer ? (y/n) : ");
+            String replay = scanner.nextLine();
+            if (!replay.equalsIgnoreCase("y")) break;
+        }
+    }
 
-            System.out.println("L'IA réfléchit...");
-            if (!aiTurn()) break;
-            if (checkGameOver(1)) break;
+    private void playSingleGame() throws Exception {
+        // remettre l'état initial
+        state = env.getState();
+        printBoardTemplate();
+
+        boolean userTurn = (userMark == 0);
+        while (true) {
+            if (userTurn) {
+                if (!playerTurn()) continue;
+                if (checkGameOver(userMark)) return;
+            } else {
+                System.out.println("L'IA réfléchit...");
+                if (!aiTurn()) return;
+                if (checkGameOver(1 - userMark)) return;
+            }
+            userTurn = !userTurn;
         }
     }
 
@@ -69,7 +92,8 @@ public class TicTacToeRunner extends Runner {
 
     private boolean checkGameOver(int player) throws Exception {
         if ("TRUE".equals(state.eval("win(" + player + ")").toString())) {
-            System.out.println(player == 0 ? "Félicitations, vous avez gagné !" : "L'IA a gagné !");
+            if (player == userMark) System.out.println("Félicitations, vous avez gagné !");
+            else System.out.println("L'IA a gagné !");
             return true;
         }
         if (state.getOutTransitions().isEmpty()) {
@@ -146,17 +170,18 @@ public class TicTacToeRunner extends Runner {
         System.out.println();
     }
 
+    private void printBoardTemplate() {
+        System.out.println("Positions :");
+        System.out.println(" 1 | 2 | 3");
+        System.out.println("---+---+---");
+        System.out.println(" 4 | 5 | 6");
+        System.out.println("---+---+---");
+        System.out.println(" 7 | 8 | 9");
+        System.out.println();
+    }
+
     private void printWelcomeMessage() {
-        System.out.println("Bienvenue au Tic Tac Toe !\n");
-        System.out.println("Règles :");
-        System.out.println("- Vous jouez contre une IA.");
-        System.out.println("- Vous êtes '0', l'IA est '1'.");
-        System.out.println("- Pour jouer, entrez un chiffre de 1 à 9 correspondant à une position sur la grille :\n");
-        System.out.println("  1 | 2 | 3");
-        System.out.println(" ---+---+---");
-        System.out.println("  4 | 5 | 6");
-        System.out.println(" ---+---+---");
-        System.out.println("  7 | 8 | 9\n");
-        System.out.println("Bonne chance !");
+        System.out.println("\nBienvenue au Tic Tac Toe !");
+        System.out.println(userMark == 0 ? "Vous êtes '0', l'IA est '1'." : "Vous êtes '1', l'IA est '0'.");
     }
 }
